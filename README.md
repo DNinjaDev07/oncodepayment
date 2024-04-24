@@ -1,7 +1,13 @@
 # OncodePayment
 
-The oncode payment project will create APIs to perform CRUD operations on
-payment APIs.
+OnCode payment is a REST API Project written in Java with the Spring framework.
 
-The final version will be Dockerised with all dependencies, along with REST Assured and Newman with postman collection
-to run CI/CD tests wit Jenkins.
+The technologies for development, testing and CI/CD include:
+
+### SpringWeb
+### Spring HATEOAS
+### REST Assured
+### Postman
+### Jenkins
+### Docker
+### Kubernetes
