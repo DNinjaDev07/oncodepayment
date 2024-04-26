@@ -3,21 +3,22 @@ package com.nozik.oncodepayment.controller;
 import com.nozik.oncodepayment.entity.Payment;
 import com.nozik.oncodepayment.exceptions.PaymentNotFoundException;
 import com.nozik.oncodepayment.repository.PaymentRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/oncode")
 public class MainController {
 
-    /*TO-DO: Fix data validation on the endpoints.
-    * Update endpoint is updating and creating new payment
-    * Provide success message on delete endpoint
-    * */
+    /*TO-DO: Fix data validation before saving to database
+    */
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -28,37 +29,43 @@ public class MainController {
     }
 
     @PostMapping("/addpayment")
-    public Payment newPayment(@RequestBody Payment newPayment) {
+    public Payment newPayment(@Valid @RequestBody Payment newPayment) {
         return paymentRepository.save(newPayment);
     }
 
     @GetMapping("/getpayment/{id}")
-    public Payment getPayments(@PathVariable Long id) throws IOException {
-        return paymentRepository.findById(id)
-                .orElseThrow(() -> new PaymentNotFoundException(id));
+    public ResponseEntity<Payment> getPayments(@PathVariable Long id) throws IOException {
+//        return paymentRepository.findById(id)
+//                .orElseThrow(() -> new PaymentNotFoundException(id));
+        Optional<Payment> userOptional = paymentRepository.findById(id);
+        return userOptional.map(ResponseEntity::ok).orElseThrow(() -> new PaymentNotFoundException(id));
     }
 
     @PutMapping("/updatepayment/{id}")
-    public Payment updatePayment(@RequestBody Payment updatePayment, @PathVariable Long id) {
+    public ResponseEntity<Payment> updatePayment(@Valid @RequestBody Payment updatePayment, @PathVariable Long id) {
 
-        return paymentRepository.findById(id)
-                .map(payment -> {
-                    payment.setAmount(updatePayment.getAmount());
-                    payment.setFromAccount(updatePayment.getFromAccount());
-                    payment.setToAccount(updatePayment.getToAccount());
-                    return paymentRepository.save(updatePayment);
-                })
-                .orElseGet(() -> {
-                    updatePayment.setId(id);
-                    return paymentRepository.save(updatePayment);
-                });
+        Optional<Payment> userOptional = paymentRepository.findById(id);
+        if (userOptional.isPresent()) {
+            Payment payment = userOptional.get();
+            payment.setAmount(updatePayment.getAmount());
+            payment.setFromAccount(updatePayment.getFromAccount());
+            payment.setToAccount(updatePayment.getToAccount());
+            paymentRepository.save(payment);
+            return ResponseEntity.ok(payment);
+        } else {
+            throw new PaymentNotFoundException(id);
+        }
     }
 
     @DeleteMapping("/deletepayment/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
-        paymentRepository.deleteById(id);
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+
+        if (paymentRepository.existsById(id)) {
+            paymentRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            throw new PaymentNotFoundException(id);
+        }
     }
-
-
 
 }

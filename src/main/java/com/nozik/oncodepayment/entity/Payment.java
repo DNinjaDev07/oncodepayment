@@ -2,6 +2,10 @@ package com.nozik.oncodepayment.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -11,13 +15,16 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+//    @NotNull
+//    @NotEmpty
     private double amount;
 
-    @Column(length = 9)
+//    @NotNull
+//    @NotEmpty
+   // @Size(min = 8, max = 10)
     private long fromAccount;
 
-    @Column(length = 9)
+    ///@NotBlank(message = "Email is mandatory")
     private long toAccount;
 
     public Payment(double amount, long fromAccount, long toAccount) {
