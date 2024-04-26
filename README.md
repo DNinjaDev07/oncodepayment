@@ -22,8 +22,9 @@ The technologies for development, testing and CI/CD include:
 A postman collection containing pre-request scripts and tests has been created to automate tests for the above endpoints.
 This can be imported along with the environment for testing.
 
-Collection - OncodePayment_Recorder.postman_collection.json
-Environment - OncodePayment.postman_environment.json
+**Collection** - OncodePayment_Recorder.postman_collection.json
+
+**Environment** - OncodePayment.postman_environment.json
 ### Jenkins
 ### Docker
 ### Kubernetes
