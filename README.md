@@ -4,7 +4,6 @@ OnCode payment recorder mimics a payment transfer solution. It is a REST API Pro
 
 The technologies for development, testing and CI/CD include:
 
-### SpringWeb
 ### REST Assured
 ### Postman
 4 end points have been developed.
@@ -25,6 +24,8 @@ This can be imported along with the environment for testing.
 **Collection** - OncodePayment_Recorder.postman_collection.json
 
 **Environment** - OncodePayment.postman_environment.json
+
+![img.png](img.png)
 ### Jenkins
 ### Docker
 ### Kubernetes
