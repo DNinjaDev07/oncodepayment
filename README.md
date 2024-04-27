@@ -26,6 +26,14 @@ This can be imported along with the environment for testing.
 **Environment** - OncodePayment.postman_environment.json
 
 ![img.png](img.png)
+
+Run the collection with Newman on the command line:
+
+`newman run OncodePayment_Recorder.postman_collection.json -e OncodePayment.postman_environment.json`
+
+![img_1.png](img_1.png)
+
+
 ### Jenkins
 ### Docker
 ### Kubernetes
