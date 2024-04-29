@@ -18,6 +18,7 @@ import java.util.Optional;
 public class MainController {
 
     /*TO-DO: Fix data validation before saving to database
+    REST Assured validation tests.
     */
 
     @Autowired
