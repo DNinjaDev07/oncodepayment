@@ -4,6 +4,17 @@ OnCode payment recorder mimics a payment transfer solution. It is a REST API Pro
 
 The technologies for development, testing and CI/CD include:
 
+### Docker
+Dockerfile is available in project and image has been built with the below command.
+
+`docker build -t oncode-paymentv1 .`
+
+![img_2.png](img_2.png)
+
+Docker container for oncode-paymentv1 running on machine.
+
+![img_3.png](img_3.png)
+
 ### REST Assured
 ### Postman
 4 end points have been developed.
@@ -35,5 +46,4 @@ Run the collection with Newman on the command line:
 
 
 ### Jenkins
-### Docker
 ### Kubernetes
