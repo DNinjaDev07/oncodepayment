@@ -1,1 +1,7 @@
+version: "3"
 services:
+  oncode-payment:
+    image: oncode-payment:1.0
+    container_name: oncode-payment
+    ports:
+      - 8080:8080

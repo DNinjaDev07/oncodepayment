@@ -5,9 +5,13 @@ OnCode payment recorder mimics a payment transfer solution. It is a REST API Pro
 The technologies for development, testing and CI/CD include:
 
 ### Docker
-Dockerfile is available in project and image has been built with the below command.
+Dockerfile is available in project and image has been built with:
 
-`docker build -t oncode-paymentv1 .`
+`docker build -t oncode-payment:1.0 .`
+
+Docker compose file has been created and can be run with:
+
+`docker-compose -f compose.yaml up -d`
 
 ![img_2.png](img_2.png)
 
@@ -32,18 +36,7 @@ Docker container for oncode-paymentv1 running on machine.
 A postman collection containing pre-request scripts and tests has been created to automate tests for the above endpoints.
 This can be imported along with the environment for testing.
 
-**Collection** - OncodePayment_Recorder.postman_collection.json
-
-**Environment** - OncodePayment.postman_environment.json
-
-![img.png](img.png)
-
-Run the collection with Newman on the command line:
-
-`newman run OncodePayment_Recorder.postman_collection.json -e OncodePayment.postman_environment.json`
-
-![img_1.png](img_1.png)
-
+[Postman Artifacts](/PostmanArtifacts)
 
 ### Jenkins
 ### Kubernetes

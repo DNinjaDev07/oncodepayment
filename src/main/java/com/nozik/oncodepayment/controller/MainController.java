@@ -12,17 +12,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/oncode")
 public class MainController {
 
-    /*TO-DO: Fix data validation before saving to database
-    REST Assured validation tests.
+    /*TO-DO:
+    Add Kubernetes section.
     */
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+            //PaymentRepository
+
 
     @GetMapping("/getpayments")
     public List<Payment> getPayments() throws IOException {
@@ -34,8 +37,10 @@ public class MainController {
         return paymentRepository.save(newPayment);
     }
 
+
+
     @GetMapping("/getpayment/{id}")
-    public ResponseEntity<Payment> getPayments(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Payment> getPayments(@PathVariable int id) throws IOException {
 //        return paymentRepository.findById(id)
 //                .orElseThrow(() -> new PaymentNotFoundException(id));
         Optional<Payment> userOptional = paymentRepository.findById(id);
@@ -43,8 +48,8 @@ public class MainController {
     }
 
     @PutMapping("/updatepayment/{id}")
-    public ResponseEntity<Payment> updatePayment(@Valid @RequestBody Payment updatePayment, @PathVariable Long id) {
-
+    public ResponseEntity<Payment> updatePayment(@Valid @RequestBody Payment updatePayment, @PathVariable int id) {
+//@Valid
         Optional<Payment> userOptional = paymentRepository.findById(id);
         if (userOptional.isPresent()) {
             Payment payment = userOptional.get();
@@ -59,7 +64,7 @@ public class MainController {
     }
 
     @DeleteMapping("/deletepayment/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
 
         if (paymentRepository.existsById(id)) {
             paymentRepository.deleteById(id);

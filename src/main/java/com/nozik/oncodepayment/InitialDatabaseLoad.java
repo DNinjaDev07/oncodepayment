@@ -1,6 +1,7 @@
 package com.nozik.oncodepayment;
 
 import com.nozik.oncodepayment.entity.Payment;
+//import com.nozik.oncodepayment.repository.PaymentMongoRepository;
 import com.nozik.oncodepayment.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

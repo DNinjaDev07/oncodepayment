@@ -1,22 +1,23 @@
 package com.nozik.oncodepayment.entity;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
+//import org.springframework.data.annotation.Id;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
-
+@Data
 @Entity
+///@Document(collection = "payments")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-//    @NotNull
-//    @NotEmpty
     private double amount;
 
 //    @NotNull
@@ -35,38 +36,6 @@ public class Payment {
 
     public Payment() {
 
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public long getFromAccount() {
-        return fromAccount;
-    }
-
-    public void setFromAccount(long fromAccount) {
-        this.fromAccount = fromAccount;
-    }
-
-    public long getToAccount() {
-        return toAccount;
-    }
-
-    public void setToAccount(long toAccount) {
-        this.toAccount = toAccount;
     }
 
     @Override
