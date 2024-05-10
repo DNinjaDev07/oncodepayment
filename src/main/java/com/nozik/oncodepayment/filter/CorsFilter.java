@@ -18,7 +18,7 @@ public class CorsFilter {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000").allowedMethods(HttpMethod.GET.name(),
-                                HttpMethod.POST.name(), HttpMethod.DELETE.name())
+                                HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name())
                         .allowedHeaders(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
                         .allowCredentials(true);
 
