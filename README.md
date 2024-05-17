@@ -27,5 +27,12 @@ This can be imported along with the environment for testing.
 
 ![img.png](img.png)
 ### Jenkins
+<<<<<<< Updated upstream
 ### Docker
+=======
+
+![img_2.png](img_2.png)
+
+### REST Assured
+>>>>>>> Stashed changes
 ### Kubernetes
