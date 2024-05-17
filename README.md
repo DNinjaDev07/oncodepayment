@@ -36,4 +36,6 @@ A postman collection [Postman Artifacts](/PostmanArtifacts) containing pre-reque
 This can be imported along with the environment for testing.
 
 ### Jenkins
+
+![img_2.png](img_2.png)
 ### Kubernetes
