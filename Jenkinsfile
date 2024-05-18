@@ -50,6 +50,9 @@ pipeline{
             steps{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                        sh 'git config --global user.email "jenkins@oncode.com"'
+                        sh 'git config --global user.name "jenkins"'
+
                         sh 'git status'
                         sh 'git branch'
                         sh 'git config --list'
