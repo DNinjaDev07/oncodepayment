@@ -56,10 +56,6 @@ pipeline{
                         sh 'git status'
                         sh 'git branch'
                         sh 'git config --list'
-
-
-                        def fullRemoteUrl = "https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
-                        echo "Full Remote URL: ${fullRemoteUrl}"
                          
                         sh 'git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git'
                         sh 'git add .'
