@@ -17,7 +17,7 @@ pipeline{
             steps{
                 script{
                     echo "building the docker image"
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                         sh 'docker build -t danieloncode/oncodepayment:2.1 .'
                         sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
                         sh 'docker push danieloncode/oncodepayment:2.1'
