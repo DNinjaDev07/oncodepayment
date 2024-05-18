@@ -13,7 +13,8 @@ pipeline{
                     -DnewVersion=\\\${parsedVersion.nextMajorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.incrementalVersion} \
                     versions:commit'
                     def newpom_matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
-                    def version = newpom_matcher[0][1]
+                    def version = newpom_matcher[1][1]
+                    echo env.IMAGE_NAME
                     env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
             }
@@ -42,6 +43,21 @@ pipeline{
             steps{
                 script{
                     echo "deploying the application..."
+                }
+            }
+        }
+        stage("commit version update"){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                        sh 'git status'
+                        sh 'git branch'
+                        sh 'git config --list'
+
+                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
+                        sh 'git add /pom.xml'
+                        sh 'git commit -m "ci: pom.xml update"'
+                        sh 'git push origin HEAD:master'
                 }
             }
         }
