@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.nozik</groupId>
     <artifactId>oncodepayment</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>oncodepayment</name>
     <description>oncodepayment</description>
     <properties>
@@ -87,7 +87,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>oncodepayment-0.0.1-SNAPSHOT</finalName>
     </build>
 
 </project>

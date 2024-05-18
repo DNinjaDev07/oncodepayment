@@ -2,7 +2,7 @@
 
 OnCode payment recorder mimics a payment record solution. It is a REST API Project written in Java with the Spring framework with H2 in-memory database.
 
-The technologies for development, testing and CI/CD include:
+The technologies for development, deployment and CI/CD include:
 
 ### Docker
 Dockerfile is available in project and image has been built with:
