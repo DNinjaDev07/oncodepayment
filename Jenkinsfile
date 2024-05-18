@@ -55,7 +55,7 @@ pipeline{
                         sh 'git config --list'
 
                         sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
-                        sh 'git add /pom.xml'
+                        sh 'git add pom.xml'
                         sh 'git commit -m "ci: pom.xml update"'
                         sh 'git push origin HEAD:master'
                 }
