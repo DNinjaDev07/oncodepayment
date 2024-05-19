@@ -37,5 +37,37 @@ This can be imported along with the environment for testing.
 
 ### Jenkins
 
+Jenkins image has been downloaded and started as a container in Docker with the following commands in Dockerfile. 
+
+_FROM jenkins/jenkins:lts
+
+USER root
+
+RUN apt-get update && \
+apt-get install -y apt-transport-https \
+ca-certificates \
+curl \
+gnupg \
+lsb-release && \
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+apt-get update && \
+apt-get install -y docker-ce-cli`
+
+USER jenkins_
+
+This command will build the image
+
+`docker build -t jenkins-with-docker-cli-installed:latest .`
+
+This will start the jenkins image in a container and apply a socket mounting between the host(Docker) and the docker inside the jenkins container.
+`docker run -p 8080:8080 -p 50000:50000 -d \
+-v jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+jenkins-with-docker-cli-installed:latest`
+
+Below showing the deployment of the app in the jenkins home.
 ![img_2.png](img_2.png)
+
+A Jenkins folder has been created [Jenkins_Artifacts](/Jenkins) containing details of the Jenkins file.
 ### Kubernetes
