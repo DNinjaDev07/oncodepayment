@@ -2,7 +2,8 @@
 
 The Jenkins file in [Jenkinsfile](/Jenkinsfile) has 4 stages.
 
-- Increment version 
-- Build java jar
-- Build docker image and push to docker hub.
+- Increment pom.xml version 
+- Build JAR file
+- Build docker image and push to AWS Elastic Container Registry (ECR).
 - Recommit pom.xml to Github that has updated version.
+- Deploy to AWS EKS Cluster

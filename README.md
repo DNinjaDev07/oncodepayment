@@ -61,6 +61,7 @@ This command will build the image
 `docker build -t jenkins-with-docker-cli-installed:latest .`
 
 This will start the jenkins image in a container and apply a socket mounting between the host(Docker) and the docker inside the jenkins container.
+
 `docker run -p 8080:8080 -p 50000:50000 -d \
 -v jenkins_home:/var/jenkins_home \
 -v /var/run/docker.sock:/var/run/docker.sock \
