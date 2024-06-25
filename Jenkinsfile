@@ -57,7 +57,7 @@ pipeline{
                         sh 'git branch'
                         sh 'git config --list'
                          
-                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
+                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@https://github.com/DNinjaDev07/oncodepayment.git"
                         sh 'git commit -am "ci: version update"'
                         sh 'git push origin HEAD:master'
                 }
