@@ -10,7 +10,7 @@ pipeline{
                 script{
                     echo 'incrementing the app version...'
                     sh 'mvn build-helper:parse-version versions:set \
-                    -DnewVersion=\\\${parsedVersion.nextMajorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.incrementalVersion} \
+                    -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
                     versions:commit'
                     def newpom_matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = newpom_matcher[1][1]
@@ -57,9 +57,8 @@ pipeline{
                         sh 'git branch'
                         sh 'git config --list'
                          
-                        sh 'git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git'
-                        sh 'git add .'
-                        sh 'git commit -m "ci: version update"'
+                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
+                        sh 'git commit -am "ci: version update"'
                         sh 'git push origin HEAD:master'
                 }
             }
