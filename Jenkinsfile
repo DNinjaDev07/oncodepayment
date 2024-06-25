@@ -49,7 +49,7 @@ pipeline{
         stage("commit version update"){
             steps{
                 script{
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASSWORD')]){
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                         sh 'git config --global user.email "jenkins@oncode.com"'
                         sh 'git config --global user.name "jenkins"'
 
@@ -58,6 +58,7 @@ pipeline{
                         sh 'git config --list'
                          
                         sh "git remote set-url origin https://${PASSWORD}@github.com/DNinjaDev07/oncodepayment.git"
+
                         sh 'git commit -am "ci: version update"'
                         sh 'git push origin HEAD:master'
                 }
