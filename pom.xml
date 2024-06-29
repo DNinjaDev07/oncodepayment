@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.nozik</groupId>
     <artifactId>oncodepayment</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>oncodepayment</name>
     <description>oncodepayment</description>
     <properties>
