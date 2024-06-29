@@ -4,6 +4,13 @@ pipeline{
      tools {
         maven 'maven-3.6'
      }
+     environment{
+        DOCKER_REPO_SERVER = '823359858998.dkr.ecr.us-east-1.amazonaws.com'
+        DOCKER_REPO = "${DOCKER_REPO_SERVER}/oncode-payment"
+        AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+        APP_NAME = 'oncodepayment'
+     }
      stages{
         stage("increment version"){
             steps{
@@ -31,10 +38,10 @@ pipeline{
             steps{
                 script{
                     echo "building the docker image"
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
-                        sh "docker build -t danieloncode/oncodepayment:${IMAGE_NAME} ."
-                        sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
-                        sh "docker push danieloncode/oncodepayment:${IMAGE_NAME}"
+                    withCredentials([usernamePassword(credentialsId: 'ecr-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                        sh "docker build -t ${DOCKER_REPO}:${IMAGE_NAME} ."
+                        sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin ${DOCKER_REPO_SERVER}"
+                        sh "docker push ${DOCKER_REPO}:${IMAGE_NAME}"
                     }
                 }
                 }
@@ -43,6 +50,8 @@ pipeline{
             steps{
                 script{
                     echo "deploying the application..."
+                    sh 'envsubst < Kubernetes/deployment.yaml | kubectl apply -f -'
+                    sh 'envsubst < Kubernetes/service.yaml | kubectl apply -f -'
                 }
             }
         }
