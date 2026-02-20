@@ -70,3 +70,6 @@ Frontend proxy target:
 ## Repo Notes
 
 - Current local orchestration file is `docker-compose.yml`.
+
+## TO-DO List
+Tidy up DevOps components (helm charts, terraform and argocd).
