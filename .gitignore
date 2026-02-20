@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local planning docs
+DEVOPS_PLAN.md
+legacy/

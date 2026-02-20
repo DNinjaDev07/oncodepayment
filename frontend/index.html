@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OnCode Payment Recorder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>OnCode Payment Recorder</h1>
+      <p>Manage payment records with full CRUD operations</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Status message -->
+    <div id="status" class="status" hidden></div>
+
+    <!-- Add / Edit Form -->
+    <section class="card form-section">
+      <h2 id="form-title">Add New Payment</h2>
+      <form id="payment-form">
+        <input type="hidden" id="payment-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="amount">Amount ($)</label>
+            <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label for="from-account">From Account</label>
+            <input type="number" id="from-account" placeholder="Account number" required>
+          </div>
+          <div class="form-group">
+            <label for="to-account">To Account</label>
+            <input type="number" id="to-account" placeholder="Account number" required>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">Add Payment</button>
+          <button type="button" class="btn btn-secondary" id="cancel-btn" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Payments Table -->
+    <section class="card">
+      <div class="table-header">
+        <h2>Payment Records</h2>
+        <button class="btn btn-outline" id="refresh-btn">Refresh</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="payments-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>From Account</th>
+              <th>To Account</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="payments-body">
+            <tr>
+              <td colspan="5" class="empty-state">Loading payments...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>OnCode Payment Recorder &mdash; A DevOps Portfolio Project</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

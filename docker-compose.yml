@@ -1,0 +1,48 @@
+services:
+  backend:
+    build: .
+    container_name: oncode-backend
+    ports:
+      - "8098:8098"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/paymentdb
+      DB_USERNAME: oncode
+      DB_PASSWORD: oncode123
+      DB_DRIVER: org.postgresql.Driver
+      JPA_DDL_AUTO: update
+      JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      CORS_ORIGINS: http://localhost,http://localhost:80
+      H2_CONSOLE_ENABLED: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: oncode-frontend
+    ports:
+      - "80:80"
+    environment:
+      API_UPSTREAM: backend:8098
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: oncode-postgres
+    environment:
+      POSTGRES_DB: paymentdb
+      POSTGRES_USER: oncode
+      POSTGRES_PASSWORD: oncode123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oncode -d paymentdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

@@ -1,74 +1,72 @@
-# OncodePayment
+# OnCode Payment Recorder
 
-OnCode payment recorder mimics a payment record solution. It is a REST API Project written in Java with the Spring framework with H2 in-memory database.
+OnCode Payment Recorder is a full-stack CRUD app for payment records.
 
-The technologies for development, deployment and CI/CD include:
+## Stack
 
-### Docker
-Dockerfile is available in project and image has been built with:
+- Backend: Java 17, Spring Boot, Spring Data JPA
+- Database: PostgreSQL in Docker Compose, H2 fallback for local app runs
+- Frontend: HTML, CSS, JavaScript, Nginx
+- Containers: Docker, Docker Compose
 
-`docker build -t oncode-payment:1.0 .`
+## Run Locally with Docker
 
-![img.png](img.png)
+1. Start:
+```bash
+docker compose up --build
+```
 
-Docker compose file has been created and can be run with:
+2. Open:
+- Frontend: `http://localhost`
+- Backend API: `http://localhost:8098/oncode/getpayments`
 
-`docker-compose -f compose.yaml up -d`
+3. Stop:
+```bash
+docker compose down
+```
 
-Docker container for oncode-paymentv1 running on machine.
+4. Stop and remove database volume:
+```bash
+docker compose down -v
+```
 
-![img_1.png](img_1.png)
+## API Endpoints
 
-### Postman
-4 end points have been developed.
-1. **GetAllPayments** - {{payurl}}/getpayments
-   - HTTP Method - GET
-2. **GetPaymentById** - {{payurl}}/getpayment/{{paymentId}}
-   - HTTP Method - GET
-3. **AddPayment** - {{payurl}}/addpayment
-   - HTTP Method - POST
-4. **UpdatePayment** - {{payurl}}/updatepayment/{{paymentId}}
-   - HTTP Method - PUT
-5. **DeletePaymentById** - {{payurl}}/deletepayment/{{paymentId}}
-   - HTTP Method - DELETE
+Base path: `/oncode`
 
-A postman collection [Postman Artifacts](/PostmanArtifacts) containing pre-request scripts and tests has been created to automate tests for the above endpoints.
-This can be imported along with the environment for testing.
+- `GET /getpayments`
+- `GET /getpayment/{id}`
+- `POST /addpayment`
+- `PUT /updatepayment/{id}`
+- `DELETE /deletepayment/{id}`
 
-### Jenkins
+Sample payload for create or update:
 
-Jenkins image has been downloaded and started as a container in Docker with the following commands in Dockerfile. 
+```json
+{
+  "amount": 42.42,
+  "fromAccount": 1111111,
+  "toAccount": 2222222
+}
+```
 
-_FROM jenkins/jenkins:lts
+## Configuration
 
-USER root
+Backend reads environment values from `src/main/resources/application.properties`.
 
-RUN apt-get update && \
-apt-get install -y apt-transport-https \
-ca-certificates \
-curl \
-gnupg \
-lsb-release && \
-curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-apt-get update && \
-apt-get install -y docker-ce-cli`
+Key values:
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `DB_DRIVER`
+- `JPA_DDL_AUTO`
+- `JPA_DIALECT`
+- `CORS_ORIGINS`
 
-USER jenkins_
+Frontend proxy target:
+- `API_UPSTREAM` in `docker-compose.yml`
+- Current local value: `backend:8098`
 
-This command will build the image
+## Repo Notes
 
-`docker build -t jenkins-with-docker-cli-installed:latest .`
-
-This will start the jenkins image in a container and apply a socket mounting between the host(Docker) and the docker inside the jenkins container.
-
-`docker run -p 8080:8080 -p 50000:50000 -d \
--v jenkins_home:/var/jenkins_home \
--v /var/run/docker.sock:/var/run/docker.sock \
-jenkins-with-docker-cli-installed:latest`
-
-Below showing the deployment of the app in the jenkins home.
-![img_2.png](img_2.png)
-
-A Jenkins folder has been created [Jenkins_Artifacts](/Jenkins) containing details of the Jenkins file.
-### Kubernetes
+- Current local orchestration file is `docker-compose.yml`.

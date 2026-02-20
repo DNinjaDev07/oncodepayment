@@ -1,32 +1,30 @@
 package com.nozik.oncodepayment.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Entity
-///@Document(collection = "payments")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private double amount;
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount must be greater than 0")
+    private Double amount;
 
-//    @NotNull
-//    @NotEmpty
-   // @Size(min = 8, max = 10)
-    private long fromAccount;
+    @NotNull(message = "Source account is required")
+    private Long fromAccount;
 
-    ///@NotBlank(message = "Email is mandatory")
-    private long toAccount;
+    @NotNull(message = "Destination account is required")
+    private Long toAccount;
 
     public Payment(double amount, long fromAccount, long toAccount) {
         this.amount = amount;
@@ -35,7 +33,6 @@ public class Payment {
     }
 
     public Payment() {
-
     }
 
     @Override
