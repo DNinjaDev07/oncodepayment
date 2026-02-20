@@ -1,11 +1,11 @@
 # OnCode Payment Recorder
 
-OnCode Payment Recorder is a full-stack CRUD app for payment records.
+OnCode Payment Recorder is a DEMO full-stack CRUD app for payment records. It will use DevOps practices for the entire flow.
 
 ## Stack
 
 - Backend: Java 17, Spring Boot, Spring Data JPA
-- Database: PostgreSQL in Docker Compose, H2 fallback for local app runs
+- Database: PostgreSQL in Docker Compose
 - Frontend: HTML, CSS, JavaScript, Nginx
 - Containers: Docker, Docker Compose
 
