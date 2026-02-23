@@ -222,6 +222,12 @@ Backend reads environment variables from `src/main/resources/application.propert
 | JPA_DIALECT | Hibernate dialect | H2Dialect |
 | CORS_ORIGINS | Allowed CORS origins | localhost variants |
 
+## Security Note
+
+This repository uses plaintext database credentials for local setup only.
+You can change credentials in `helm/oncodepayment/values.yaml` and `docker-compose.yml`.
+In production, use a secret manager pattern such as Sealed Secrets, SOPS, or External Secrets with Vault/AWS Secrets Manager.
+
 Terraform variables (all have defaults, override with `-var` or `terraform.tfvars`):
 
 | Variable | Default |

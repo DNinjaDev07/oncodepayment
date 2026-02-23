@@ -8,6 +8,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test
@@ -88,5 +92,4 @@ jobs:
           fi
 
           git commit -m "ci: update Helm image tags to ${GITHUB_SHA} [skip ci]"
-          git pull --rebase origin master
           git push origin HEAD:master
