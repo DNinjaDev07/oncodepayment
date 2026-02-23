@@ -88,4 +88,5 @@ jobs:
           fi
 
           git commit -m "ci: update Helm image tags to ${GITHUB_SHA} [skip ci]"
+          git pull --rebase origin master
           git push origin HEAD:master
