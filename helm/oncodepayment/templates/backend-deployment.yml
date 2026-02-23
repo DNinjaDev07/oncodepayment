@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-backend"
+  labels:
+    name: "{{ .Release.Name }}-backend"
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      name: "{{ .Release.Name }}-backend"
+  template:
+    metadata:
+      labels:
+        name: "{{ .Release.Name }}-backend"
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ .Release.Name }}-config"
+                  key: DB_URL
+            - name: DB_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ .Release.Name }}-config"
+                  key: DB_DRIVER
+            - name: JPA_DIALECT
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ .Release.Name }}-config"
+                  key: JPA_DIALECT
+            - name: JPA_DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ .Release.Name }}-config"
+                  key: JPA_DDL_AUTO
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-secret"
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-secret"
+                  key: DB_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /oncode/getpayments
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /oncode/getpayments
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 15

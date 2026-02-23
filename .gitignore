@@ -35,3 +35,10 @@ build/
 # Local planning docs
 DEVOPS_PLAN.md
 legacy/
+
+### Terraform ###
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example

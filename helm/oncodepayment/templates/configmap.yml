@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-config"
+  labels:
+    name: "{{ .Release.Name }}-config"
+data:
+  DB_URL: {{ printf "jdbc:postgresql://%s-postgres-service:%v/%s" .Release.Name .Values.postgresql.port .Values.postgresql.database | quote }}
+  DB_DRIVER: {{ .Values.backend.env.dbDriver | quote }}
+  JPA_DIALECT: {{ .Values.backend.env.jpaDialect | quote }}
+  JPA_DDL_AUTO: {{ .Values.backend.env.jpaDdlAuto | quote }}

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: oncodepayment
+description: OnCode Payment Recorder - DEMO DevOps CRUD application
+type: application
+version: 0.1.0
+appVersion: "${VERSION}"
+maintainers:
+    - name: Daniel
+      email: daniel.ogorigbosuah@gmail.com

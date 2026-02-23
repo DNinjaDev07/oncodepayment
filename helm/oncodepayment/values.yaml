@@ -1,0 +1,33 @@
+backend:
+    image:
+        repository: ghcr.io/DNinjaDev07/oncodepayment-backend
+        tag: latest
+        pullPolicy: IfNotPresent
+    replicas: 1
+    port: 8098
+    env:
+        dbUsername: oncode
+        dbDriver: org.postgresql.Driver
+        jpaDialect: org.hibernate.dialect.PostgreSQLDialect
+        jpaDdlAuto: update
+
+frontend:
+    image:
+        repository: ghcr.io/DNinjaDev07/oncodepayment-frontend
+        tag: latest
+        pullPolicy: IfNotPresent
+    replicas: 1
+    port: 80
+
+postgresql:
+    image: postgres:16-alpine
+    port: 5432
+    database: paymentdb
+    username: oncode
+    password: oncode123
+    storage: 1Gi
+
+ingress:
+    enabled: true
+    className: nginx
+    host: oncodepayment.local
