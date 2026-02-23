@@ -1,17 +1,72 @@
 # OnCode Payment Recorder
 
-A DEMO DevOps CRUD app for payment records. This project demonstrates a full DevOps pipeline: containerized Spring Boot backend, Nginx frontend, PostgreSQL database, Helm charts for Kubernetes, Terraform for Infrastructure As Code, and ArgoCD for GitOps.
+This is a DevOps CRUD app for payment records. It includes a Spring Boot backend, Nginx frontend, PostgreSQL, Helm, Terraform, and ArgoCD.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph DEV ["Developer"]
+        A[Push Code]
+    end
+
+    subgraph CI ["GitHub Actions CI/CD"]
+        B[Run Tests] --> C[Build Docker Images]
+        C --> D[Push to Docker Hub]
+        D --> E[Update Helm values.yaml\nwith new image tags]
+        E --> F[Commit & Push]
+    end
+
+    subgraph GITREPO ["GitHub Repository"]
+        G[helm/oncodepayment/\nvalues.yaml]
+    end
+
+    subgraph K8S ["Kubernetes Cluster"]
+        subgraph PLATFORM ["Platform Layer - Terraform"]
+            H[Nginx Ingress Controller]
+            I[ArgoCD]
+        end
+        subgraph APP ["Application Layer - ArgoCD"]
+            J[Frontend\nNginx]
+            K[Backend\nSpring Boot]
+            L[PostgreSQL]
+        end
+    end
+
+    A --> B
+    F --> G
+    I -- "watches & syncs" --> G
+    I -- "helm template + apply" --> APP
+    H -- "/" --> J
+    H -- "/oncode" --> K
+    K --> L
+```
+
+## GitOps Flow
+
+```
+1. Developer pushes code to GitHub
+2. GitHub Actions runs tests, builds Docker images, pushes to Docker Hub
+3. CI updates image tags in helm/oncodepayment/values.yaml and commits
+4. ArgoCD detects the change in the repo
+5. ArgoCD renders the Helm chart and applies manifests to the cluster
+6. New pods roll out with the updated images
+```
+
+> **Current status:** Steps 1-6 are implemented. The CI workflow runs tests, builds and pushes images to Docker Hub, and updates Helm image tags.
 
 ## Stack
 
-- Backend: Java 17, Spring Boot, Spring Data JPA
-- Database: PostgreSQL (H2 fallback for local dev/tests)
-- Frontend: HTML, CSS, JavaScript, Nginx
-- Containers: Docker (multi-stage builds), Docker Compose
-- Orchestration: Kubernetes via Kind cluster
-- Infrastructure: Terraform (Ingress, ArgoCD, namespaces)
-- Platform: Nginx Ingress Controller, ArgoCD
-- GitOps: ArgoCD watches this repo and auto-syncs Helm charts to the cluster
+| Layer | Technology |
+|-------|-----------|
+| Backend | Java 17, Spring Boot, Spring Data JPA |
+| Database | PostgreSQL (H2 fallback for local dev/tests) |
+| Frontend | HTML, CSS, JavaScript, Nginx |
+| Containers | Docker (multi-stage builds), Docker Compose |
+| Orchestration | Kubernetes (Kind for local) |
+| Infrastructure | Terraform (Ingress, ArgoCD, namespaces) |
+| GitOps | ArgoCD (auto-sync from GitHub) |
+| Ingress | Nginx Ingress Controller (host-based routing) |
 
 ## Run Locally with Docker
 
@@ -34,46 +89,88 @@ docker compose down
 docker compose down -v
 ```
 
-## Run on Kubernetes (Kind + Terraform)
+## Run on Kubernetes (Kind + Terraform + ArgoCD)
 
-Prerequisites: Docker, Kind, Terraform (>= 1.14), kubectl, Helm 3.x
+### Prerequisites
+
+- Docker
+- [Kind](https://kind.sigs.k8s.io/)
+- [Terraform](https://www.terraform.io/) >= 1.14
+- kubectl
+- Helm 3.x
+
+### Setup
 
 1. Create the Kind cluster:
 ```bash
 kind create cluster --name oncodepayment --config kind-config.yaml
 ```
 
-2. Deploy the platform (Ingress, ArgoCD, namespaces, ArgoCD Application):
+2. Build and load images into Kind:
+```bash
+docker build -t danieloncode/oncodepayment-backend:latest .
+docker build -t danieloncode/oncodepayment-frontend:latest ./frontend
+
+kind load docker-image danieloncode/oncodepayment-backend:latest --name oncodepayment
+kind load docker-image danieloncode/oncodepayment-frontend:latest --name oncodepayment
+```
+Replace `danieloncode` with your Docker Hub username if you fork this repo.
+
+3. Deploy the platform (Ingress, ArgoCD, namespaces, ArgoCD Application):
 ```bash
 cd terraform
 terraform init
 terraform apply
 ```
+Terraform creates the following resources:
+| Resource | Purpose |
+|----------|---------|
+| `kubernetes_namespace` x3 | `oncodepayment`, `argocd`, `ingress-nginx` |
+| `helm_release.nginx_ingress` | Nginx Ingress Controller for routing |
+| `helm_release.argocd` | ArgoCD server, controller, repo-server |
+| `kubectl_manifest.argocd_app` | ArgoCD Application pointing to `helm/oncodepayment` |
 
-3. Access ArgoCD:
+4. Access ArgoCD UI:
 ```bash
 kubectl port-forward -n argocd svc/argocd-server 8080:443
 ```
 - URL: https://localhost:8080
-- Username: admin
+- Username: `admin`
 - Password:
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 ```
 
-4. Access the app:
+5. Access the app:
 ```bash
-# Add to /etc/hosts
+# Add to /etc/hosts (required, Ingress routes by hostname)
 127.0.0.1 oncodepayment.local
 ```
 Visit http://oncodepayment.local:8081
 
-5. Tear down:
+> **Why /etc/hosts?** The Ingress uses host-based routing (`oncodepayment.local`). Without this entry, the browser sends `Host: localhost` and the Ingress returns 404. The hosts entry makes the browser send the correct `Host` header.
+
+### Tear Down
+
 ```bash
 cd terraform
 terraform destroy
 kind delete cluster --name oncodepayment
 ```
+
+## CI/CD Setup
+
+1. Create a Docker Hub access token.
+   Go to `https://hub.docker.com`, open **Account Settings**, open **Security**, then create a **New Access Token**.
+   Set access permissions to **Read & Write**.
+
+2. Add GitHub repository secrets.
+   Open your repo, go to **Settings > Secrets and variables > Actions**, then add:
+   - `DOCKERHUB_USERNAME` with your Docker Hub username
+   - `DOCKERHUB_TOKEN` with your Docker Hub access token
+
+3. Push to `master`.
+   The pipeline runs tests, builds images, pushes to Docker Hub, and updates Helm tags.
 
 ## API Endpoints
 
@@ -149,8 +246,6 @@ Terraform variables (all have defaults, override with `-var` or `terraform.tfvar
 
 ## DevOps Progress
 
-Based on the implementation plan (DEVOPS_PLAN.md):
-
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Move legacy files to legacy/ | Done |
@@ -158,5 +253,17 @@ Based on the implementation plan (DEVOPS_PLAN.md):
 | 3 | PostgreSQL + Docker Compose | Done |
 | 4 | Helm charts (10 templates) | Done |
 | 5 | Terraform (platform infrastructure) | Done |
-| 6 | GitHub Actions CI/CD pipeline | Not started |
+| 6 | GitHub Actions CI/CD pipeline | Done |
 | 7 | ArgoCD GitOps end-to-end flow | Partial |
+
+### What is left
+
+**Phase 7: Full GitOps loop verification.** ArgoCD is configured and points to `helm/oncodepayment` on `master`. Final verification is operational: push to `master`, confirm CI builds and pushes images, confirm CI commits new tags, then confirm ArgoCD syncs the rollout.
+
+### Known issues
+
+- Helm: No resource requests/limits on any pod.
+- Helm: PostgreSQL and frontend deployments have no health probes.
+- Helm: Database credentials are in plaintext in `values.yaml`.
+- Docker Compose: PostgreSQL port 5432 is exposed to all interfaces.
+- Terraform: Local state only, no remote backend.

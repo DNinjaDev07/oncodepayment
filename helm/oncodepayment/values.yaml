@@ -1,6 +1,6 @@
 backend:
     image:
-        repository: ghcr.io/dninjadev07/oncodepayment-backend
+        repository: danieloncode/oncodepayment-backend
         tag: latest
         pullPolicy: IfNotPresent
     replicas: 1
@@ -13,7 +13,7 @@ backend:
 
 frontend:
     image:
-        repository: ghcr.io/dninjadev07/oncodepayment-frontend
+        repository: danieloncode/oncodepayment-frontend
         tag: latest
         pullPolicy: IfNotPresent
     replicas: 1
