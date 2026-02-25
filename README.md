@@ -57,13 +57,13 @@ flowchart LR
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | Java 17, Spring Boot, Spring Data JPA |
+| Backend | Spring Boot |
 | Database | PostgreSQL (H2 fallback for local dev/tests) |
 | Frontend | HTML, CSS, JavaScript, Nginx |
 | Containers | Docker (multi-stage builds), Docker Compose |
 | Orchestration | Kubernetes (Kind for local) |
-| Infrastructure | Terraform (Ingress, ArgoCD, namespaces) |
-| GitOps | ArgoCD (auto-sync from GitHub) |
+| Infrastructure | Terraform |
+| GitOps | ArgoCD |
 | Ingress | Nginx Ingress Controller (host-based routing) |
 
 ## Run Locally with Docker
@@ -104,7 +104,7 @@ docker compose down -v
 kind create cluster --name oncodepayment --config kind-config.yaml
 ```
 
-2. Deploy the platform (Ingress, ArgoCD, namespaces, ArgoCD Application):
+2. Deploy the platform with terraform:
 ```bash
 cd terraform
 terraform init
@@ -113,7 +113,7 @@ terraform apply
 Terraform creates the following resources:
 | Resource | Purpose |
 |----------|---------|
-| `kubernetes_namespace` x3 | `oncodepayment`, `argocd`, `ingress-nginx` |
+| `kubernetes_namespace` | `oncodepayment`, `argocd`, `ingress-nginx` |
 | `helm_release.nginx_ingress` | Nginx Ingress Controller for routing |
 | `helm_release.argocd` | ArgoCD server, controller, repo-server |
 | `kubectl_manifest.argocd_app` | ArgoCD Application pointing to `helm/oncodepayment` |
