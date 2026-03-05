@@ -160,6 +160,9 @@ kind delete cluster --name oncodepayment
 3. Push to `master`.
    The pipeline runs tests, builds images, pushes to Docker Hub, and updates Helm tags.
 
+4. Check ArgoCD dashboard to see the new version deployed.
+
+
 ## API Endpoints
 
 Base path: `/oncode`
