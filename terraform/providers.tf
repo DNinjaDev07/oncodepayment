@@ -14,6 +14,10 @@ terraform {
       source  = "alekc/kubectl"
       version = "~> 2.1"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
   }
 }
 
@@ -29,4 +33,8 @@ provider "kubernetes" {
 
 provider "kubectl" {
   config_path = pathexpand(var.kubeconfig_path)
+}
+
+provider "aws" {
+  region = var.aws_region
 }

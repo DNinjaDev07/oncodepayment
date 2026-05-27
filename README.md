@@ -5,41 +5,68 @@ This is a DevOps CRUD app for payment records. It includes a Spring Boot backend
 ## Architecture
 
 ```mermaid
-flowchart LR
-    subgraph DEV ["Developer"]
-        A[Push Code]
+flowchart TB
+    classDef actor fill:#ebf8ff,stroke:#3182ce,color:#1a365d,stroke-width:2px;
+    classDef repo fill:#f5f3ff,stroke:#7c3aed,color:#3b0764,stroke-width:1.5px;
+    classDef ci fill:#fff7ed,stroke:#ea580c,color:#7c2d12,stroke-width:1.5px;
+    classDef registry fill:#fdf4ff,stroke:#c026d3,color:#701a75,stroke-width:1.5px;
+    classDef platform fill:#ecfeff,stroke:#0e7490,color:#164e63,stroke-width:1.5px;
+    classDef app fill:#f0fdf4,stroke:#16a34a,color:#14532d,stroke-width:1.5px;
+    classDef data fill:#fef2f2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+
+    subgraph SOURCE["Source Control"]
+        DEV["Developer"] -->|"push"| REPO["GitHub Repository"]
+        REPO --> HELM["helm/oncodepayment/values.yaml"]
+        TF["Terraform\n(terraform/)"]
     end
 
-    subgraph CI ["GitHub Actions CI/CD"]
-        B[Run Tests] --> C[Build Docker Images]
-        C --> D[Push to Docker Hub]
-        D --> E[Update Helm values.yaml\nwith new image tags]
-        E --> F[Commit & Push]
+    subgraph CI["GitHub Actions CI Pipeline"]
+        TEST["Run tests"] --> BUILD["Build backend + frontend images"]
+        BUILD --> PUSH["Push images to Docker Hub"]
+        PUSH --> UPDATE["Update Helm image tags"]
+        UPDATE --> COMMIT["Commit back to repository"]
     end
 
-    subgraph GITREPO ["GitHub Repository"]
-        G[helm/oncodepayment/\nvalues.yaml]
+    subgraph REG["Container Registry"]
+        DH["Docker Hub"]
     end
 
-    subgraph K8S ["Kubernetes Cluster"]
-        subgraph PLATFORM ["Platform Layer - Terraform"]
-            H[Nginx Ingress Controller]
-            I[ArgoCD]
+    subgraph K8S["Kubernetes Cluster"]
+        subgraph PLATFORM["Platform Layer (Terraform-managed)"]
+            INGRESS["Nginx Ingress Controller"]
+            ARGO["ArgoCD"]
         end
-        subgraph APP ["Application Layer - ArgoCD"]
-            J[Frontend\nNginx]
-            K[Backend\nSpring Boot]
-            L[PostgreSQL]
+        subgraph APP["Application Layer (ArgoCD-managed)"]
+            FE["Frontend (Nginx)"]
+            BE["Backend (Spring Boot API)"]
+            DB["PostgreSQL"]
         end
     end
 
-    A --> B
-    F --> G
-    I -- "watches & syncs" --> G
-    I -- "helm template + apply" --> APP
-    H -- "/" --> J
-    H -- "/oncode" --> K
-    K --> L
+    REPO -->|"triggers CI"| TEST
+    PUSH --> DH
+    COMMIT --> REPO
+
+    ARGO -->|"watches Helm values"| HELM
+    ARGO -->|"syncs"| FE
+    ARGO -->|"syncs"| BE
+    ARGO -->|"syncs"| DB
+
+    TF -.->|"provisions"| INGRESS
+    TF -.->|"provisions"| ARGO
+
+    INGRESS -->|"/"| FE
+    INGRESS -->|"/oncode"| BE
+    FE -->|"HTTP API"| BE
+    BE -->|"JDBC"| DB
+
+    class DEV actor
+    class REPO,HELM,TF repo
+    class TEST,BUILD,PUSH,UPDATE,COMMIT ci
+    class DH registry
+    class INGRESS,ARGO platform
+    class FE,BE app
+    class DB data
 ```
 
 ## GitOps Flow

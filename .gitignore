@@ -39,6 +39,7 @@ legacy/
 ### Terraform ###
 **/.terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+.terraform.tfstate.lock.info
 *.tfvars
 !*.tfvars.example
