@@ -24,6 +24,7 @@ postgresql:
     port: 5432
     database: paymentdb
     existingSecret: oncodepayment-secret
+    awsSecretName: oncodepayment-dev/postgres
     storage: 1Gi
 
 ingress:

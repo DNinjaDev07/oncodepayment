@@ -29,3 +29,7 @@ resource "helm_release" "nginx_ingress" {
 
   depends_on = [kubernetes_namespace.ingress_nginx]
 }
+
+resource "kubernetes_namespace" "external_secrets" {
+  metadata { name = local.external_secrets_namespace }
+}

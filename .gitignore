@@ -40,6 +40,7 @@ build/
 # Local planning docs
 DEVOPS_PLAN.md
 legacy/
+scripts/
 
 ### Terraform ###
 **/.terraform/
