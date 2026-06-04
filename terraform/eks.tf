@@ -2,14 +2,6 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-locals {
-  azs = slice(data.aws_availability_zones.available.names, 0, 2)
-  tags = {
-    Project     = "oncodepayment"
-    Environment = "dev"
-  }
-}
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "6.6.1"
@@ -41,6 +33,18 @@ module "eks" {
 
   enable_irsa = true
 
+  addons = {
+    vpc-cni = {
+      before_compute = true
+    }
+
+    kube-proxy = {
+      before_compute = true
+    }
+
+    coredns = {}
+  }
+
   eks_managed_node_groups = {
     default = {
       instance_types = ["t3.small"]
@@ -51,6 +55,7 @@ module "eks" {
     }
   }
 
-  tags = local.tags
+  access_entries = local.access_entries
+  tags           = local.tags
 }
 

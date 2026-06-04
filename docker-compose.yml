@@ -6,8 +6,8 @@ services:
       - "8098:8098"
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/paymentdb
-      DB_USERNAME: oncode
-      DB_PASSWORD: oncode123
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_DRIVER: org.postgresql.Driver
       JPA_DDL_AUTO: update
       JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
@@ -32,14 +32,14 @@ services:
     container_name: oncode-postgres
     environment:
       POSTGRES_DB: paymentdb
-      POSTGRES_USER: oncode
-      POSTGRES_PASSWORD: oncode123
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U oncode -d paymentdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d paymentdb"]
       interval: 5s
       timeout: 5s
       retries: 5

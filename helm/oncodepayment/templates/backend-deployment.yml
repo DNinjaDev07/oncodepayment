@@ -44,12 +44,12 @@ spec:
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-secret"
+                  name: {{ .Values.postgresql.existingSecret | quote }}
                   key: DB_USERNAME
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-secret"
+                  name: {{ .Values.postgresql.existingSecret | quote }}
                   key: DB_PASSWORD
           readinessProbe:
             httpGet:

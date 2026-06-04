@@ -32,6 +32,11 @@ build/
 ### VS Code ###
 .vscode/
 
+# Local environment files
+.env
+.env.*
+!.env.example
+
 # Local planning docs
 DEVOPS_PLAN.md
 legacy/

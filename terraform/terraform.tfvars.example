@@ -1,0 +1,12 @@
+# AWS region and cluster name
+  aws_region   = "us-east-2"
+  cluster_name = "oncodepayment-dev"
+
+  # IAM principal ARNs that should get Kubernetes admin access through EKS access entries.
+  # For AWS SSO, use the IAM role ARN, not the STS assumed-role session ARN.
+  cluster_admin_principal_arns = [
+    "arn:aws:iam::<account-id>:role/aws-reserved/sso.amazonaws.com/<sso-region>/AWSReservedSSO_AdministratorAccess_<suffix>"
+  ]
+
+  # IAM principal ARNs that should get read-only Kubernetes view access.
+  cluster_viewer_principal_arns = []

@@ -23,8 +23,7 @@ postgresql:
     image: postgres:16-alpine
     port: 5432
     database: paymentdb
-    username: oncode
-    password: oncode123
+    existingSecret: oncodepayment-secret
     storage: 1Gi
 
 ingress:

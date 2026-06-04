@@ -95,21 +95,28 @@ flowchart TB
 
 ## Run Locally with Docker
 
-1. Start the full stack:
+1. Create a local environment file:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set a local database password. The `.env` file is ignored by Git and must not be committed.
+
+2. Start the full stack:
 ```bash
 docker compose up --build
 ```
 
-2. Open:
+3. Open:
 - Frontend: http://localhost
 - Backend API: http://localhost:8098/oncode/getpayments
 
-3. Stop:
+4. Stop:
 ```bash
 docker compose down
 ```
 
-4. Stop and remove database volume:
+5. Stop and remove database volume:
 ```bash
 docker compose down -v
 ```

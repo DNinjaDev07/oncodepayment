@@ -39,3 +39,15 @@ variable "cluster_name" {
   type        = string
   default     = "oncodepayment-dev"
 }
+
+variable "cluster_admin_principal_arns" {
+  description = "IAM principal ARNs that get EKS cluster admin access"
+  type        = list(string)
+  default     = []
+}
+
+variable "cluster_viewer_principal_arns" {
+  description = "IAM principal ARNs that get EKS cluster view access"
+  type        = list(string)
+  default     = []
+}
