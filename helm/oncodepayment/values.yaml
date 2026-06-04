@@ -1,7 +1,7 @@
 backend:
     image:
         repository: danieloncode/oncodepayment-backend
-        tag: 869bd12f306d2d0a7a47e4c99735f136fdea4a31
+        tag: f1df18dae5ae48bb77b4fe1fca9950d7b8e4fbe8
         pullPolicy: IfNotPresent
     replicas: 1
     port: 8098
@@ -14,7 +14,7 @@ backend:
 frontend:
     image:
         repository: danieloncode/oncodepayment-frontend
-        tag: 869bd12f306d2d0a7a47e4c99735f136fdea4a31
+        tag: f1df18dae5ae48bb77b4fe1fca9950d7b8e4fbe8
         pullPolicy: IfNotPresent
     replicas: 1
     port: 80
