@@ -5,18 +5,13 @@ OnCode Payment is an end-to-end GitOps platform for a Spring Boot payment applic
 ## Architecture
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {
-  "background": "#ffffff",
-  "primaryColor": "#eef6ff",
-  "primaryTextColor": "#172033",
-  "primaryBorderColor": "#2563eb",
-  "lineColor": "#475569",
-  "secondaryColor": "#ecfdf5",
-  "tertiaryColor": "#fff7ed",
-  "clusterBkg": "#f8fafc",
-  "clusterBorder": "#94a3b8"
-}}}%%
 flowchart LR
+    classDef source fill:#eef6ff,stroke:#2563eb,color:#172033
+    classDef delivery fill:#fff7ed,stroke:#ea580c,color:#431407
+    classDef platform fill:#f0fdfa,stroke:#0f766e,color:#134e4a
+    classDef workload fill:#f0fdf4,stroke:#16a34a,color:#14532d
+    classDef data fill:#fef2f2,stroke:#dc2626,color:#450a0a
+
     Dev["Developer"] --> Git["GitHub repository"]
     Git --> CI["GitHub Actions"]
     CI --> Images["Docker Hub images"]
@@ -44,6 +39,12 @@ flowchart LR
 
     Ingress --> App
     App --> DB
+
+    class Dev,Git,TF source
+    class CI,Images,Argo delivery
+    class AWS,Ingress,ESO,Storage platform
+    class App workload
+    class Secret,DB,PVC,EBS data
 ```
 
 ### Secret And Storage Flow
