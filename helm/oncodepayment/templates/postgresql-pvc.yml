@@ -10,4 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.postgresql.storage | quote }}
-  storageClassName: standard
+  storageClassName: {{ .Values.postgresql.storageClass | quote }}

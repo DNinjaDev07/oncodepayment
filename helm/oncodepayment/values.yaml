@@ -26,6 +26,7 @@ postgresql:
     existingSecret: oncodepayment-secret
     awsSecretName: oncodepayment-dev/postgres
     storage: 1Gi
+    storageClass: standard
 
 ingress:
     enabled: true

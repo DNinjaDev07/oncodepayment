@@ -1,0 +1,2 @@
+postgresql:
+  storageClass: gp2

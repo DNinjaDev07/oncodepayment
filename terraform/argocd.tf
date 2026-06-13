@@ -27,6 +27,9 @@ resource "kubectl_manifest" "argocd_app" {
         repoURL        = var.app_repo_url
         targetRevision = var.app_target_revision
         path           = "helm/oncodepayment"
+        helm = {
+          valueFiles = ["values-eks.yaml"]
+        }
       }
       destination = {
         server    = "https://kubernetes.default.svc"
