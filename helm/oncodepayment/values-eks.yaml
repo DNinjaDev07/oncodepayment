@@ -1,2 +1,2 @@
 postgresql:
-  storageClass: gp2
+  storageClass: ebs-gp3

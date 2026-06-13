@@ -27,3 +27,8 @@ output "external_secrets_role_arn" {
   description = "IAM role ARN used by External Secrets Operator via IRSA"
   value       = aws_iam_role.external_secrets.arn
 }
+
+output "ebs_csi_role_arn" {
+  description = "IAM role ARN used by the Amazon EBS CSI driver via IRSA"
+  value       = aws_iam_role.ebs_csi.arn
+}
