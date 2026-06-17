@@ -10,4 +10,4 @@ spec:
     name: "{{ .Release.Name }}-frontend"
   ports:
     - port: {{ .Values.frontend.port }}
-      targetPort: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.containerPort }}

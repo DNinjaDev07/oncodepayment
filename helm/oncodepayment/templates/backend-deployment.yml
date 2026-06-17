@@ -14,10 +14,22 @@ spec:
       labels:
         name: "{{ .Release.Name }}-backend"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           ports:
             - containerPort: {{ .Values.backend.port }}
           env:
@@ -51,6 +63,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgresql.existingSecret | quote }}
                   key: DB_PASSWORD
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           readinessProbe:
             httpGet:
               path: /oncode/getpayments
@@ -63,3 +80,6 @@ spec:
               port: {{ .Values.backend.port }}
             initialDelaySeconds: 30
             periodSeconds: 15
+      volumes:
+        - name: tmp
+          emptyDir: {}

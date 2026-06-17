@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: "{{ .Release.Name }}-postgres"
   labels:
     name: "{{ .Release.Name }}-postgres"
 spec:
+  serviceName: "{{ .Release.Name }}-postgres-service"
   replicas: 1
   selector:
     matchLabels:
@@ -17,6 +18,10 @@ spec:
       containers:
         - name: postgres
           image: "{{ .Values.postgresql.image }}"
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
           ports:
             - containerPort: {{ .Values.postgresql.port }}
           env:
@@ -32,10 +37,18 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgresql.existingSecret | quote }}
                   key: DB_PASSWORD
+          resources:
+            {{- toYaml .Values.postgresql.resources | nindent 12 }}
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: postgres-data
-          persistentVolumeClaim:
-            claimName: "{{ .Release.Name }}-postgres-pvc"
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: {{ .Values.postgresql.storageClass | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.postgresql.storage | quote }}

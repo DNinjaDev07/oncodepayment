@@ -14,12 +14,24 @@ spec:
       labels:
         name: "{{ .Release.Name }}-frontend"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: frontend
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: API_UPSTREAM
               value: "{{ .Release.Name }}-backend-service:{{ .Values.backend.port }}"
           ports:
-            - containerPort: {{ .Values.frontend.port }}
+            - containerPort: {{ .Values.frontend.containerPort }}
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}

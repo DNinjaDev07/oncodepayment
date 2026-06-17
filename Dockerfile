@@ -13,5 +13,9 @@ WORKDIR /app
 
 COPY --from=build /app/target/oncodepayment-*.jar app.jar
 
+# Run as a non-root user (uid 1000) instead of root.
+RUN useradd -r -u 1000 appuser
+USER 1000
+
 EXPOSE 8098
 ENTRYPOINT ["java", "-jar", "app.jar"]

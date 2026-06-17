@@ -16,6 +16,12 @@ public class InitialDatabaseLoad {
     @Bean
     CommandLineRunner initDatabase(PaymentRepository repository) {
         return args -> {
+            long existing = repository.count();
+            if (existing > 0) {
+                log.info("Skipping seed data: {} payment(s) already present", existing);
+                return;
+            }
+
             Random random = new Random();
             int minIterations = 4;
             int maxIterations = 10;

@@ -5,9 +5,10 @@ metadata:
   labels:
     name: "{{ .Release.Name }}-postgres-service"
 spec:
+  # Headless service: governs the StatefulSet and gives the pod stable DNS.
+  clusterIP: None
   selector:
     name: "{{ .Release.Name }}-postgres"
   ports:
     - port: {{ .Values.postgresql.port }}
       targetPort: {{ .Values.postgresql.port }}
-  type: ClusterIP
