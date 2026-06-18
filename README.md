@@ -9,8 +9,6 @@
 ![ArgoCD](https://img.shields.io/badge/GitOps-ArgoCD-EF7B4D?logo=argo&logoColor=white)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
 
-OnCode Payment is an end-to-end GitOps platform that takes a Spring Boot payment API from commit to Amazon EKS. It brings together the engineering expected of a production delivery pipeline: multi-stage Docker builds, a Helm chart, Terraform-provisioned AWS (VPC, EKS, IAM/IRSA, EBS), GitHub Actions image delivery, ArgoCD reconciliation, and secrets sourced from AWS Secrets Manager through the External Secrets Operator.
-
 ## Contents
 
 - [Pipeline](#pipeline)
@@ -27,7 +25,7 @@ OnCode Payment is an end-to-end GitOps platform that takes a Spring Boot payment
 
 ## Pipeline
 
-The delivery path is a single straight line from a commit to a running workload. Terraform provisions the cluster once; everything below runs on every push.
+The delivery path runs straight from a commit to a running workload. Terraform provisions the cluster once; everything below runs on every push.
 
 ```mermaid
 flowchart LR
@@ -60,7 +58,7 @@ flowchart LR
 - **Immutable, traceable images** — every deploy is pinned to a commit SHA, so a running pod maps back to an exact commit.
 - **Infrastructure as Code** — the entire AWS footprint (VPC, EKS, IAM, IRSA, EBS CSI) is declared in Terraform and reproducible from zero.
 - **Secretless manifests** — no database credential ever lives in Git; the External Secrets Operator pulls it from AWS Secrets Manager using an IRSA-scoped, least-privilege IAM role.
-- **Encrypted, durable storage** — PostgreSQL runs as a StatefulSet backed by an encrypted EBS gp3 volume provisioned on demand by the EBS CSI driver.
+- **Encrypted storage** — PostgreSQL runs as a StatefulSet backed by an encrypted EBS gp3 volume provisioned on demand by the EBS CSI driver.
 
 ## Tech stack
 
@@ -253,7 +251,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 
 ## CI/CD
 
-Pushes and pull requests to `master` run the Maven tests. On a push to `master`, the workflow additionally builds the backend and frontend images, pushes them to Docker Hub tagged with the commit SHA, rewrites the Helm image tags, and commits the change back with `[skip ci]`. ArgoCD then reconciles the new tags onto the cluster.
+Every push and pull request to `master` runs the Maven tests. A push to `master` then builds the backend and frontend images, pushes them to Docker Hub tagged with the commit SHA, rewrites the Helm image tags, and commits that change back with `[skip ci]`. ArgoCD reconciles the new tags onto the cluster.
 
 Required GitHub Actions secrets:
 
