@@ -1,6 +1,6 @@
 # OnCode Payment
 
-> An end-to-end GitOps reference platform: a Spring Boot payment API shipped from commit to Amazon EKS through GitHub Actions, Docker, Helm, ArgoCD, and Terraform.
+> An end-to-end GitOps platform: a Spring Boot payment API shipped from commit to Amazon EKS through GitHub Actions, Docker, Helm, ArgoCD, and Terraform.
 
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?logo=springboot&logoColor=white)
@@ -25,7 +25,7 @@
 
 ## Pipeline
 
-The delivery path runs straight from a commit to a running workload. Terraform provisions the cluster once; everything below runs on every push.
+Terraform provisions the cluster once; everything below runs on every push.
 
 ```mermaid
 flowchart LR
@@ -56,8 +56,8 @@ flowchart LR
 
 - **GitOps delivery** — Git is the single source of truth; ArgoCD reconciles the cluster to match it, with automated prune and self-heal.
 - **Immutable, traceable images** — every deploy is pinned to a commit SHA, so a running pod maps back to an exact commit.
-- **Infrastructure as Code** — the entire AWS footprint (VPC, EKS, IAM, IRSA, EBS CSI) is declared in Terraform and reproducible from zero.
-- **Secretless manifests** — no database credential ever lives in Git; the External Secrets Operator pulls it from AWS Secrets Manager using an IRSA-scoped, least-privilege IAM role.
+- **Infrastructure as Code** — the entire AWS footprint (VPC, EKS, IAM, IRSA, EBS CSI) is declared in Terraform.
+- **Secrets stay out of Git** — no database credential ever lives in Git; the External Secrets Operator pulls it from AWS Secrets Manager using an IRSA-scoped, least-privilege IAM role.
 - **Encrypted storage** — PostgreSQL runs as a StatefulSet backed by an encrypted EBS gp3 volume provisioned on demand by the EBS CSI driver.
 
 ## Tech stack
@@ -69,11 +69,9 @@ flowchart LR
 | Database | PostgreSQL 16 |
 | Local runtime | Docker Compose |
 | Container build | Multi-stage Docker |
-| Kubernetes | Amazon EKS 1.34 (Kind-compatible chart defaults) |
-| Infrastructure | Terraform (terraform-aws-modules for VPC and EKS) |
+| Kubernetes | Amazon EKS 1.34 |
+| Infrastructure | Terraform |
 | Delivery | Helm, ArgoCD, GitHub Actions, Docker Hub |
-| Secrets | AWS Secrets Manager, External Secrets Operator, IRSA |
-| Storage | Amazon EBS CSI driver, encrypted gp3 |
 
 ## Repository layout
 
